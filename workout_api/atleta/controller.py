@@ -5,16 +5,18 @@ from typing import Optional, List
 from workout_api.atleta.schemas import AtletaCustomResponse
 from workout_api.dependencies import get_session
 from workout_api.atleta.service import buscar_atletas_customizado
+from fastapi_pagination import Page, paginate
 
 router = APIRouter()
 
-@router.get("/", response_model=List[AtletaCustomResponse])
-async def listar_atletas_custom(
+@router.get("/", response_model=Page[AtletaCustomResponse])
+async def listar_atletas_com_paginacao(
     nome: Optional[str] = Query(None),
     cpf: Optional[str] = Query(None),
     session: AsyncSession = Depends(get_session)
 ):
-    return await buscar_atletas_customizado(session, nome=nome, cpf=cpf)
+    atletas = await buscar_atletas_customizado(session, nome=nome, cpf=cpf)
+    return paginate(atletas)
 
 
 router = APIRouter()
