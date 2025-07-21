@@ -1,15 +1,19 @@
-from datetime import datetime
-from uuid import uuid4
-from fastapi import APIRouter, Body, HTTPException, status
-from pydantic import UUID4
+from fastapi import APIRouter, Depends, Query
+from sqlalchemy.ext.asyncio import AsyncSession
+from typing import Optional, List
+from workout_api.atleta.schemas import AtletaSchema
+from workout_api.dependencies import get_session
+from workout_api.atleta.service import buscar_atletas  # ou onde estiver sua lógica
 
-from workout_api.atleta.schemas import AtletaIn, AtletaOut, AtletaUpdate
-from workout_api.atleta.models import AtletaModel
-from workout_api.categorias.models import CategoriaModel
-from workout_api.centro_treinamento.models import CentroTreinamentoModel
+router = APIRouter()
 
-from workout_api.contrib.dependencies import DatabaseDependency
-from sqlalchemy.future import select
+@router.get("/", response_model=List[AtletaSchema])
+async def listar_atletas(
+    nome: Optional[str] = Query(None),
+    cpf: Optional[str] = Query(None),
+    session: AsyncSession = Depends(get_session)
+):
+    return await buscar_atletas(session, nome=nome, cpf=cpf)
 
 router = APIRouter()
 
