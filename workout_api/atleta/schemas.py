@@ -5,6 +5,17 @@ from workout_api.centro_treinamento.schemas import CentroTreinamentoAtleta
 
 from workout_api.contrib.schemas import BaseSchema, OutMixin
 
+from pydantic import BaseModel
+from typing import Optional
+
+class AtletaCustomResponse(BaseModel):
+    nome: str
+    centro_treinamento: Optional[str]
+    categoria: Optional[str]
+
+    class Config:
+        orm_mode = True
+
 
 class Atleta(BaseSchema):
     nome: Annotated[str, Field(description='Nome do atleta', example='Joao', max_length=50)]
