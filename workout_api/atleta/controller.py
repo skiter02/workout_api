@@ -19,12 +19,13 @@ async def listar_atletas_custom(
 
 router = APIRouter()
 
-@router.post(
-    '/', 
-    summary='Criar um novo atleta',
-    status_code=status.HTTP_201_CREATED,
-    response_model=AtletaOut
-)
+@router.post("/", response_model=AtletaSchema, status_code=201)
+async def criar_atleta_endpoint(
+    atleta_data: AtletaCreate,
+    session: AsyncSession = Depends(get_session)
+):
+    return await criar_atleta(session, atleta_data)
+
 async def post(
     db_session: DatabaseDependency, 
     atleta_in: AtletaIn = Body(...)
