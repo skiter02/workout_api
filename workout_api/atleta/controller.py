@@ -1,19 +1,21 @@
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Optional, List
-from workout_api.atleta.schemas import AtletaSchema
+
+from workout_api.atleta.schemas import AtletaCustomResponse
 from workout_api.dependencies import get_session
-from workout_api.atleta.service import buscar_atletas  # ou onde estiver sua lógica
+from workout_api.atleta.service import buscar_atletas_customizado
 
 router = APIRouter()
 
-@router.get("/", response_model=List[AtletaSchema])
-async def listar_atletas(
+@router.get("/", response_model=List[AtletaCustomResponse])
+async def listar_atletas_custom(
     nome: Optional[str] = Query(None),
     cpf: Optional[str] = Query(None),
     session: AsyncSession = Depends(get_session)
 ):
-    return await buscar_atletas(session, nome=nome, cpf=cpf)
+    return await buscar_atletas_customizado(session, nome=nome, cpf=cpf)
+
 
 router = APIRouter()
 
